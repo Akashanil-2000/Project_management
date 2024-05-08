@@ -14,12 +14,12 @@
       <form method="post" action="{% url 'create_todo' %}" onsubmit="return validateForm()">
         {% csrf_token %}
         <div class="form-group">
-          <label for="taskName">Todo Name:</label>
-          <input type="text" class="form-control" id="taskName" name="name" placeholder="Enter todo name" required />
+          <label for="todoName">Todo Name:</label>
+          <input type="text" class="form-control" id="todoName" name="name" placeholder="Enter todo name" required />
         </div>
         <div class="form-group">
-          <label for="taskCategory">Project:</label>
-          <select class="form-control" id="taskCategory" name="project" required>
+          <label for="todoProject">Project:</label>
+          <select class="form-control" id="todoProject" name="project" required>
             <option value="">Select Project</option>
             {% for project in projects %}
               <option value="{{ project.id }}">{{ project.name }}</option>

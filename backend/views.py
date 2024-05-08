@@ -208,9 +208,6 @@ def generate_summary():
     return summary
 
 
-
-
-
 def create_gist(summary):
     # Replace with your GitHub token
     token = ''
@@ -228,8 +225,6 @@ def create_gist(summary):
         return response.json()["html_url"]
     else:
         return None
-
-
 
 class GenerateSummaryView(View):
     def get(self, request, *args, **kwargs):

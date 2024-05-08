@@ -10,7 +10,7 @@
     <div class="container mt-5">
       <h2 class="text-center">Update todo</h2>
       <br>
-      <form method="post" id="updatetaskForm">
+      <form method="post" id="updatetodoForm">
         {% csrf_token %}
         <div class="form-group">
           <label for="name">Name:</label>
@@ -51,10 +51,10 @@
         }
       }
       
-      // Add task listener to form submission for validation
-      document.getElementById('updatetaskForm').addtaskListener('submit', function (task) {
+      // Add todo listener to form submission for validation
+      document.getElementById('updatetodoForm').addtpListener('submit', function (todo) {
         if (!validateEndDate()) {
-          task.prtaskDefault() // Prtask form submission if validation fails
+          todo.prtodoDefault() 
         }
       })
     </script>

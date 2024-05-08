@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Category List</title>
+    <title>Project List</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   </head>
@@ -16,8 +16,8 @@
       </div>
       <br>
 
-      <a href="{% url 'create_project' %}" class="btn btn-primary mb-3">Create Project</a> <!-- Button to create category -->
-      <a href="{% url 'logout' %}" class="btn btn-danger mb-3">Logout</a> <!-- Button to view task chart -->
+      <a href="{% url 'create_project' %}" class="btn btn-primary mb-3">Create Project</a> 
+      <a href="{% url 'logout' %}" class="btn btn-danger mb-3">Logout</a> <!-- Button to view todo chart -->
       <table class="table">
         <thead>
           <tr>
@@ -34,7 +34,7 @@
               <td>
                 <form method="post" action="{% url 'delete_project' project.id %}" style="display: inline;">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-danger btn-sm">Delete</button> <!-- Button to delete category -->
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button> 
                 </form>
               </td>
             </tr>

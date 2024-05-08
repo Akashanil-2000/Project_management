@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Category</title>
+    <title>Create Project</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   </head>
@@ -14,8 +14,8 @@
       <form method="post" action="{% url 'create_project' %}">
         {% csrf_token %}
         <div class="form-group">
-          <label for="categoryName">Project Name:</label>
-          <input type="text" class="form-control" id="categoryName" name="name" placeholder="Enter category name" required />
+          <label for="projectName">Project Name:</label>
+          <input type="text" class="form-control" id="projectName" name="name" placeholder="Enter project name" required />
         </div>
         <button type="submit" class="btn btn-primary">Create</button>
       </form>
