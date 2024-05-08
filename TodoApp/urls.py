@@ -22,4 +22,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('login/', views.user_login, name='login'),
     path('register/', views.register, name='register'),
+    path('', views.project_list, name='project_list'),
+    path('project/create/', views.create_project, name='create_project'),
+    path("logout/", views.LogoutPage, name="logout"),
+    path('projects/<int:project_id>/', views.project_todos, name='project_todos'),
+    path('project/delete/<int:project_id>/', views.delete_project, name='delete_project'),
+    path('todos/delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
 ]

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Project(models.Model):
     name = models.CharField(max_length=100,default=1)
-    created_date = models.DateTimeField()
+    created_date = models.DateTimeField(default=1)
 
 
 class Todo(models.Model):
