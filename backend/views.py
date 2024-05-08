@@ -88,7 +88,7 @@ def LogoutPage(request):
 def project_todos(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     todos = project.todo_set.all()
-    return render(request, 'task_management_system_app/category_tasks.html', {'project': project, 'todos': todos})
+    return render(request, 'todoApp/project_todos.html', {'project': project, 'todos': todos})
 
 @login_required
 @admin_required
@@ -109,3 +109,46 @@ def delete_project(request, project_id):
         project.delete()
         messages.success(request, "Project deleted successfully.")
     return redirect('project_list')
+
+
+@login_required
+@admin_required
+def create_todo(request):
+    if request.method == 'POST':
+        # Retrieve data from the POST request
+        name = request.POST.get('name')
+        project_id = request.POST.get('project')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        description = request.POST.get('description')
+        project = Project.objects.get(pk=project_id)
+        todo = Todo.objects.create(
+            name=name,
+            project=project,
+            start_date=start_date,
+            end_date=end_date,
+            description=description,
+        )
+
+        # Redirect to the task list page
+        return redirect('project_list')
+    else:
+        projects = Project.objects.all()
+        users = User.objects.all()
+        return render(request, 'todoApp/create_todo.html', {'projects': projects, 'users': users})
+
+@login_required
+@admin_required
+def update_todo(request, todo_id):
+    todo = Todo.objects.get(pk=todo_id)
+    if request.method == 'POST':
+        # Update task fields based on form data
+        todo.name = request.POST.get('name')
+        todo.start_date = request.POST.get('start_date')
+        todo.end_date = request.POST.get('end_date')
+        todo.description = request.POST.get('description')
+        todo.save()
+        return redirect('project_list')
+    else:
+        # Render update task page with task data
+        return render(request, 'todoApp/update_todo.html', {'todo': todo})
