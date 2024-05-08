@@ -151,6 +151,29 @@ def update_todo(request, todo_id):
         # Render update task page with task data
         return render(request, 'todoApp/update_todo.html', {'todo': todo})
     
+<<<<<<< HEAD
+=======
+@login_required
+@admin_required
+def update_todo(request, todo_id):
+    todo = Todo.objects.get(pk=todo_id)
+    if request.method == 'POST':
+        # Update task fields based on form data
+        todo.name = request.POST.get('name')
+        todo.start_date = request.POST.get('start_date')
+        todo.end_date = request.POST.get('end_date')
+        todo.description = request.POST.get('description')
+        todo.save()
+        return redirect('project_list')
+    else:
+        # Render update task page with task data
+        return render(request, 'todoApp/update_todo.html', {'todo': todo})
+    
+import requests
+from django.http import HttpResponse
+from django.views import View
+
+>>>>>>> f2a3c416e03c3336b5df6b62866f714452d65fc1
 def generate_summary():
     summary = '# Project Summary\n\n'
     projects = Project.objects.all()
@@ -167,6 +190,10 @@ def generate_summary():
     return summary
 
 def create_gist(summary):
+<<<<<<< HEAD
+=======
+    # Replace with your GitHub token
+>>>>>>> f2a3c416e03c3336b5df6b62866f714452d65fc1
     token = ''
     headers = {'Authorization': f'token {token}', 'accept': 'application/vnd.github+json'}
     data = {
@@ -185,9 +212,19 @@ def create_gist(summary):
 
 class GenerateSummaryView(View):
     def get(self, request, *args, **kwargs):
+<<<<<<< HEAD
         summary = generate_summary()
+=======
+        # Generate summary
+        summary = generate_summary()
+        # Create gist
+>>>>>>> f2a3c416e03c3336b5df6b62866f714452d65fc1
         gist_url = create_gist(summary)
         if gist_url:
             return HttpResponse(f'Successfully created gist: {gist_url}')
         else:
+<<<<<<< HEAD
             return HttpResponse('Failed to create gist', status=500)
+=======
+            return HttpResponse('Failed to create gist', status=500)
+>>>>>>> f2a3c416e03c3336b5df6b62866f714452d65fc1
