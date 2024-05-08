@@ -18,10 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from backend import views
 from backend.views import GenerateSummaryView
-<<<<<<< HEAD
-=======
 
->>>>>>> f2a3c416e03c3336b5df6b62866f714452d65fc1
 
 urlpatterns = [
     path("admin/", admin.site.urls),
