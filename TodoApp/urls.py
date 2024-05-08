@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from backend import views
+from backend.views import GenerateSummaryView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -30,4 +32,5 @@ urlpatterns = [
     path('todos/delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
     path('todos/create/', views.create_todo, name='create_todo'),
     path('todos/update/<int:todo_id>/', views.update_todo, name='update_todo'),
+    path('generate-summary/', GenerateSummaryView.as_view(), name='generate_summary'),
 ]

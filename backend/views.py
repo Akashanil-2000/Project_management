@@ -152,3 +152,67 @@ def update_todo(request, todo_id):
     else:
         # Render update task page with task data
         return render(request, 'todoApp/update_todo.html', {'todo': todo})
+    
+@login_required
+@admin_required
+def update_todo(request, todo_id):
+    todo = Todo.objects.get(pk=todo_id)
+    if request.method == 'POST':
+        # Update task fields based on form data
+        todo.name = request.POST.get('name')
+        todo.start_date = request.POST.get('start_date')
+        todo.end_date = request.POST.get('end_date')
+        todo.description = request.POST.get('description')
+        todo.save()
+        return redirect('project_list')
+    else:
+        # Render update task page with task data
+        return render(request, 'todoApp/update_todo.html', {'todo': todo})
+    
+import requests
+from django.http import HttpResponse
+from django.views import View
+
+def generate_summary():
+    summary = '# Project Summary\n\n'
+    projects = Project.objects.all()
+
+    for project in projects:
+        summary += f'## {project.name}\n\n'
+        todos = Todo.objects.filter(project=project)
+        
+        for todo in todos:
+            summary += f'### {todo.name}\n'
+            summary += f'- Description: {todo.description}\n'
+            summary += f'- End date: {todo.end_date}\n\n'
+
+    return summary
+
+def create_gist(summary):
+    # Replace with your GitHub token
+    token = ''
+    headers = {'Authorization': f'token {token}', 'accept': 'application/vnd.github+json'}
+    data = {
+        'description': 'Project Summary',
+        'files': {
+            'summary.md': {
+                'content': summary
+            }
+        }
+    }
+    response = requests.post('https://api.github.com/gists', headers=headers, json=data)
+    if response.status_code == 201:
+        return response.json()["html_url"]
+    else:
+        return None
+
+class GenerateSummaryView(View):
+    def get(self, request, *args, **kwargs):
+        # Generate summary
+        summary = generate_summary()
+        # Create gist
+        gist_url = create_gist(summary)
+        if gist_url:
+            return HttpResponse(f'Successfully created gist: {gist_url}')
+        else:
+            return HttpResponse('Failed to create gist', status=500)
