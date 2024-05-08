@@ -1,17 +1,15 @@
-from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Project, Todo
-from django.shortcuts import render, redirect
-from datetime import datetime
-from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.admin.views.decorators import staff_member_required
+from django.urls import reverse
+from django.views.generic import View
+import requests
+from datetime import datetime
+from .models import Project, Todo
 
 from django.contrib.auth.decorators import login_required
 
@@ -152,3 +150,44 @@ def update_todo(request, todo_id):
     else:
         # Render update task page with task data
         return render(request, 'todoApp/update_todo.html', {'todo': todo})
+    
+def generate_summary():
+    summary = '# Project Summary\n\n'
+    projects = Project.objects.all()
+
+    for project in projects:
+        summary += f'## {project.name}\n\n'
+        todos = Todo.objects.filter(project=project)
+        
+        for todo in todos:
+            summary += f'### {todo.name}\n'
+            summary += f'- Description: {todo.description}\n'
+            summary += f'- End date: {todo.end_date}\n\n'
+
+    return summary
+
+def create_gist(summary):
+    token = ''
+    headers = {'Authorization': f'token {token}', 'accept': 'application/vnd.github+json'}
+    data = {
+        'description': 'Project Summary',
+        'files': {
+            'summary.md': {
+                'content': summary
+            }
+        }
+    }
+    response = requests.post('https://api.github.com/gists', headers=headers, json=data)
+    if response.status_code == 201:
+        return response.json()["html_url"]
+    else:
+        return None
+
+class GenerateSummaryView(View):
+    def get(self, request, *args, **kwargs):
+        summary = generate_summary()
+        gist_url = create_gist(summary)
+        if gist_url:
+            return HttpResponse(f'Successfully created gist: {gist_url}')
+        else:
+            return HttpResponse('Failed to create gist', status=500)
