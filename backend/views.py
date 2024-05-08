@@ -184,24 +184,35 @@ from django.views import View
 
 
 def generate_summary():
-    summary = '# Project Summary\n\n'
+    summary = ''
     projects = Project.objects.all()
 
     for project in projects:
-        summary += f'## {project.name}\n\n'
+        summary += f'# {project.name}\n\n'
         todos = Todo.objects.filter(project=project)
-        
-        for todo in todos:
-            summary += f'### {todo.name}\n'
-            summary += f'- Description: {todo.description}\n'
-            summary += f'- End date: {todo.end_date}\n\n'
+        completed_todos = todos.filter(completed=True)
+        pending_todos = todos.filter(completed=False)
+        total_todos = todos.count()
+        completed_count = completed_todos.count()
+
+        summary += f'Summary: {completed_count} / {total_todos} completed.\n\n'
+
+        summary += '## Pending Todos\n\n'
+        for todo in pending_todos:
+            summary += f'- [ ] **{todo.name}** - Description: {todo.description}, End date: {todo.end_date}\n\n'
+
+        summary += '## Completed Todos\n\n'
+        for todo in completed_todos:
+            summary += f'- [x] **{todo.name}** - Description: {todo.description}, End date: {todo.end_date}\n\n'
 
     return summary
 
+
+
+
+
 def create_gist(summary):
-
     # Replace with your GitHub token
-
     token = ''
     headers = {'Authorization': f'token {token}', 'accept': 'application/vnd.github+json'}
     data = {
@@ -218,14 +229,18 @@ def create_gist(summary):
     else:
         return None
 
+
+
 class GenerateSummaryView(View):
     def get(self, request, *args, **kwargs):
         # Generate summary
-        summary = generate_summary()
+        summary = generate_summary()  # Call generate_summary without any arguments
         # Create gist
         gist_url = create_gist(summary)
         if gist_url:
             return HttpResponse(f'Successfully created gist: {gist_url}')
         else:
             return HttpResponse('Failed to create gist', status=500)
+
+
 
