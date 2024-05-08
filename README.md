@@ -7,13 +7,13 @@ Brief project description goes here.
 1. **Clone the repository:**
 
     ```bash
-    git clone <repository-url>
+    git clone <https://github.com/Akashanil-2000/Project_management.git>
     ```
 
 2. **Navigate to the project directory:**
 
     ```bash
-    cd project-name
+    cd TodoApp
     ```
 
 3. **Install dependencies:**
