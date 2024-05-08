@@ -11,41 +11,91 @@
       <h2 class="text-center">{{ project.name }} Todos</h2>
       <br />
       <div class="mb-3">
-        <a href="{% url 'create_todo' %}" class="btn btn-primary">Add New todo</a> <!-- Button to add new task -->
-        <a href="{% url 'project_list' %}" class="btn btn-secondary ml-2">Back to Projects</a> <!-- Button to go back to categories -->
+        <a href="{% url 'create_todo' %}" class="btn btn-primary">Add New todo</a>
+        <a href="{% url 'project_list' %}" class="btn btn-secondary ml-2">Back to Projects</a>
       </div>
-      <table id="taskTable" class="table">
-        <thead>
-          <tr>
-            <th>Task name</th>
-            <th>Start Date</th>
-            <th>Description</th>
-            <!-- Button for sorting by priority -->
-            <th>Actions</th> <!-- Column for actions -->
-          </tr>
-        </thead>
+    
+      <!-- Pending Todos Section -->
+      <h3>Pending Todos</h3>
+      <table id="pendingTaskTable" class="table">
+        <tr>
+          <th>Status</th>
+          <th>Task name</th>
+          <th>Start Date</th>
+          <th>Description</th>
+          
+          <th>Actions</th>
+      </tr>
+        <!-- Table headers -->
         <tbody>
           {% for todo in todos %}
-            <tr>
-              <td>{{ todo.name }}</td>
-              <td>{{ todo.start_date }}</td>
-              <td>{{ todo.description }}</td>
-              
-              <td>
-                <a href="{% url 'update_todo' todo.id %}" class="btn btn-primary btn-sm">Update</a> <!-- Button to update task -->
-                <form method="post" action="{% url 'delete_todo' todo.id %}" style="display: inline;">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-danger btn-sm">Delete</button> <!-- Button to delete task -->
-                </form>
-
-              </td>
-            </tr>
+            {% if not todo.completed %} <!-- Only display pending todos -->
+              <tr>
+                <td><input type="checkbox" class="todo-checkbox" data-todo-id="{{ todo.id }}"></td>
+                <td>{{ todo.name }}</td>
+                <td>{{ todo.start_date }}</td>
+                <td>{{ todo.description }}</td>
+                <td>
+                  <a href="{% url 'update_todo' todo.id %}" class="btn btn-primary btn-sm">Update</a>
+                  <form method="post" action="{% url 'delete_todo' todo.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            {% endif %}
           {% endfor %}
         </tbody>
       </table>
-    </div
+    
+      <!-- Completed Todos Section -->
+      <h3>Completed Todos</h3>
+      <table id="completedTaskTable" class="table">
+        <th>Status</th>
+        <th>Task name</th>
+          
+        <!-- Table headers -->
+        <tbody>
+          {% for todo in todos %}
+            {% if todo.completed %} <!-- Only display completed todos -->
+              <tr>
+                <td><input type="checkbox" class="todo-checkbox" data-todo-id="{{ todo.id }}" checked disabled></td>
+                <td>{{ todo.name }}</td>
+                
+                <td>
+                  <!-- You can add additional actions for completed todos if needed -->
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    ...
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Your custom JavaScript -->
+    <script>
+    $(document).ready(function() {
+        $('.todo-checkbox').change(function() {
+            var todoId = $(this).data('todo-id');
+            $.ajax({
+                url: '/todo/' + todoId + '/toggle_completion/',
+                type: 'POST',
+                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(data) {
+                    // Reload the page or update UI as needed
+                    location.reload();
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
+
   </body>
 </html>

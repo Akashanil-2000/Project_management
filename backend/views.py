@@ -168,6 +168,16 @@ def update_todo(request, todo_id):
         # Render update task page with task data
         return render(request, 'todoApp/update_todo.html', {'todo': todo})
     
+@login_required
+@admin_required
+def toggle_todo_completion(request, todo_id):
+    if request.method == 'POST':
+        todo = Todo.objects.get(id=todo_id)
+        todo.completed = not todo.completed
+        todo.save()
+    return redirect('project_todos', project_id=todo.project.id)
+
+    
 import requests
 from django.http import HttpResponse
 from django.views import View

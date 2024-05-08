@@ -13,3 +13,4 @@ class Todo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     description = models.TextField(default='')
+    completed = models.BooleanField(default=False)

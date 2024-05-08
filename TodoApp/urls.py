@@ -33,4 +33,6 @@ urlpatterns = [
     path('todos/create/', views.create_todo, name='create_todo'),
     path('todos/update/<int:todo_id>/', views.update_todo, name='update_todo'),
     path('generate-summary/', GenerateSummaryView.as_view(), name='generate_summary'),
+    path('todo/<int:todo_id>/toggle_completion/', views.toggle_todo_completion, name='toggle_todo_completion'),
+
 ]
