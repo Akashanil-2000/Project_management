@@ -102,7 +102,7 @@ def delete_todo(request, todo_id):
 @admin_required
 def delete_project(request, project_id):
     project = Project.objects.get(pk=project_id)
-    if project.task_set.exists():
+    if project.todo_set.exists():
         messages.error(
             request, "You cannot delete this project as it contains tasks.")
     else:
